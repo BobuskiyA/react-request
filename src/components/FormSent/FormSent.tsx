@@ -1,6 +1,5 @@
 import React, { useState, FormEvent, ChangeEvent } from "react";
-import "./FormSent";
-
+import "./FormSent.css";
 import sendMessage from "../../requests/sendMessage";
 import formatFormData from "../../helpers/formatFormData";
 
@@ -26,7 +25,7 @@ function FormSent() {
 
     // Проста валідація: перевірка, чи введено значення
     if (!formData.description.trim()) {
-      setError("Будь ласка, введіть щось перед відправкою.");
+      setError("Please enter something before submitting");
       return;
     }
 
@@ -38,7 +37,7 @@ function FormSent() {
       await sendMessage(formattedData);
 
       // Логування в консоль успішної відправки
-      console.log("Відправлено успішно:", formattedData);
+      console.log("Sent successfully:", formattedData);
 
       // Очищення полів вводу та скидання помилок
       setFormData((prevFormData) => ({
@@ -48,16 +47,16 @@ function FormSent() {
       setError(null);
     } catch (error) {
       // Виведення помилки в консоль у разі невдачі
-      console.error("Помилка під час відправки:", error);
-      setError("Виникла помилка під час відправки. Спробуйте ще раз.");
+      console.error("Error sending:", error);
+      setError("An error occurred while sending. Try again.");
     }
   };
 
   return (
-    <div className="App">
+    <div className="formsent">
       <form onSubmit={handleSubmit}>
-        <label>
-          Введіть щось:
+        <label className="form-text">
+          Enter something:
           <input
             type="text"
             id="description"
@@ -67,8 +66,10 @@ function FormSent() {
             required
           />
         </label>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit">Відправити</button>
+        {error && <p className="error-message">{error}</p>}
+        <button className="form-button" type="submit">
+          Sent
+        </button>
       </form>
     </div>
   );
