@@ -65,7 +65,7 @@ function FormEmail() {
           value={formData.text}
           onChange={handleChange}
         ></textarea>
-        <button type="submit" className="send-form">
+        <button type="button" className="send-form">
           Sent
         </button>
         <div className="status"></div>
