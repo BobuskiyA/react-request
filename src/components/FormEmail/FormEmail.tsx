@@ -1,77 +1,95 @@
-import React, { useState, FormEvent, ChangeEvent } from "react";
-import "./FormEmail.css";
-import "../../email/sender.php";
-function FormEmail() {
-  const [formData, setFormData] = useState({
-    name: "",
-    surname: "",
-    phone: "",
-    email: "",
-    text: "",
+import { useState, useRef, ChangeEvent, FormEvent } from "react";
+import emailjs from "@emailjs/browser";
+
+import "./FormEmail.scss";
+
+interface FormData {
+  [key: string]: string;
+  user_name: string;
+  user_email: string;
+  subject: string;
+  message: string;
+}
+
+const FormEmail = () => {
+  const form = useRef<HTMLFormElement>(null);
+
+  const [formData, setFormData] = useState<FormData>({
+    user_name: "",
+    user_email: "",
+    subject: "",
+    message: "",
   });
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const sendEmail = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    try {
+      const result = await emailjs.send(
+        "service_byqzsee",
+        "template_s7ajl0r",
+        formData,
+        "dqcPHtDQ9mI-hn9yU"
+      );
+
+      console.log(result.text);
+      if (form.current) {
+        form.current.reset();
+      }
+    } catch (error: any) {
+      console.log(error.text);
+    }
   };
 
   return (
-    <div className="formsent">
-      <form action="sender.php" method="post" onSubmit={handleSubmit}>
+    <section className="formsent">
+      <h2>Form Sent Emaile</h2>
+      <form ref={form} onSubmit={sendEmail}>
         <input
           type="text"
           className="name"
-          name="name"
-          placeholder="FirstName"
+          name="user_name"
+          placeholder="FullName"
+          value={formData.user_name}
+          onChange={handleChange}
           required
-          value={formData.name}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="surname"
-          placeholder="LastName"
-          required
-          value={formData.surname}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          className="phone"
-          name="phone"
-          placeholder="Phone"
-          value={formData.phone}
-          onChange={handleChange}
         />
         <input
           type="email"
-          name="email"
+          name="user_email"
           placeholder="Email"
-          required
-          value={formData.email}
+          value={formData.user_email}
           onChange={handleChange}
+          required
         />
+        <input
+          type="text"
+          name="subject"
+          placeholder="Subject"
+          value={formData.subject}
+          onChange={handleChange}
+          required
+        />
+
         <textarea
-          name="text"
-          value={formData.text}
+          name="message"
+          value={formData.message}
           onChange={handleChange}
         ></textarea>
-        <button type="button" className="send-form">
+        <button type="submit" className="send-form">
           Sent
         </button>
         <div className="status"></div>
       </form>
-    </div>
+    </section>
   );
-}
+};
 
 export default FormEmail;
