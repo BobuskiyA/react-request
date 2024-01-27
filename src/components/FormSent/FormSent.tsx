@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, ChangeEvent } from "react";
-import "./FormSent.css";
+import "./FormSent.scss";
 import sendMessage from "../../requests/sendMessage";
 import formatFormData from "../../helpers/formatFormData";
 

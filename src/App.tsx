@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, ChangeEvent } from "react";
-import "./App.css";
+import "./App.scss";
 
 import FormSent from "./components/FormSent/FormSent";
 import FormEmail from "./components/FormEmail/FormEmail";
